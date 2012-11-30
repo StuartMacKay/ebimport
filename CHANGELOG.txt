@@ -1,0 +1,5 @@
+Version 0.1.0 (30-Nov-2012)
+---------------------------
+
+  * Updated basic script to use pyCLI.
+  * Now uses class based handlers for the different file formats.
