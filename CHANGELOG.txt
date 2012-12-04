@@ -1,5 +1,12 @@
-Version 0.1.0 (30-Nov-2012)
+Version 0.1.0 (04-Dec-2012)
 ---------------------------
 
   * Updated basic script to use pyCLI.
   * Now uses class based handlers for the different file formats.
+
+Data Changes:
+
+  * Corrected entries for species names to use North American spelling.
+  * Corrected entry for Fan-tailed Warbler to Zitting Cisticola.
+  * Removed country code for locations not defined in eBird.
+  * Changed region code to remove the "PT-" prefix for eBird locations.
