@@ -17,8 +17,7 @@ dist/
 !/.gitignore
 
 # local files
-data/
-docs/
+/ref/
 
 # backups
 *~
