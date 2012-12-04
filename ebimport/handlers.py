@@ -275,7 +275,7 @@ class PortugalAvesHandler(object):
         end_time = datetime.datetime.strptime(rin['End time'], "%H:%M")
         duration_hours = (end_time - start_time).seconds / 3600
         duration_minutes = ((end_time - start_time).seconds % 3600) / 60
-        rout['Duration'] = "%d:%d" % (duration_hours, duration_minutes)
+        rout['Duration'] = "%d" % (duration_hours * 60 + duration_minutes)
 
         rout['Number of Observers'] = rin['Number of observers']
         rout['All observations reported?'] = rin['All birds recorded?'][0].upper()
