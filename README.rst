@@ -15,4 +15,10 @@ Tools available:
 
 Supported Databases:
 
+Records have been successfully imported into eBird from the following databases
+
    PortugalAves   BirdLife International's database for Portugal
+   Kuşbank        BirdLife International's database for Turkey
+
+Converting records from other Birdlife International databases hosted on
+http://www.worldbirds.org will probably work.

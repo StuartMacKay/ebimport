@@ -3,21 +3,26 @@
 
 import cli.log
 
-from ebimport.handlers import PortugalAvesHandler
+from ebimport.handlers import WorldbirdsHandler
 
 
 @cli.log.LoggingApp(message_format="%(levelname)s: %(message)s")
 def script(app):
 
-    handlers = {
-        'portugalaves': PortugalAvesHandler,
-    }
-
     filein = app.params.filein
     fileout = app.params.fileout
+    format = app.params.format
 
-    handler = handlers.get(app.params.format)()
-    handler.load_resources()
+    species = {
+        'worldbirds': 'data/birdlife_species_names.csv',
+    }
+
+    handlers = {
+        'worldbirds': WorldbirdsHandler,
+    }
+
+    handler = handlers.get(format)()
+    handler.load_resources(species.get(format))
     handler.convert_file(filein, fileout)
 
 
@@ -29,7 +34,7 @@ script.add_param("-o", "--output-file", dest='fileout', action="store",
                  help="file where the records to import into eBird are stored")
 
 script.add_param("filein", type=str,
-                 help="file containing records exported from WorldBirds")
+                 help="file containing exported records")
 
 if __name__ == "__main__":
     script.run()

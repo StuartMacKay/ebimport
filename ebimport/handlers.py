@@ -3,6 +3,7 @@
 
 import codecs
 import datetime
+import os
 import pkg_resources
 import re
 
@@ -32,62 +33,31 @@ EBIRD_HEADERS = [
 ]
 
 
-class PortugalAvesHandler(object):
-    species_filename = None
-    species = {}
+class WorldbirdsHandler(object):
 
-    locations_filename = None
-    locations = {}
+    headers = {
+        'BirdLife common name': 6,
+        'Location': 7,
+        'Latitude': 11,
+        'Longitude': 12,
+        'Visit date': 20,
+        'Start time': 21,
+        'End time': 22,
+        'Number of observers': 24,
+        'Visit notes': 25,
+        'Number': 26,
+        'All birds recorded?': 33,
+        'Visit species notes': 35,
+    }
 
-    headers = [
-        'Family name',
-        'Family sequence',
-        'Species sequence',
-        'Scientific name',
-        'Common name',
-        'BirdLife common name',
-        'Location','Region/State',
-        'Location area',
-        'Minimum Altitude',
-        'Maximum Altitude',
-        'Latitude','Longitude',
-        'Location notes',
-        'WBDB code',
-        'Location is IBA',
-        'Location can have subunits',
-        'Location is private',
-        'Location validated',
-        'Location accuracy',
-        'Visit date',
-        'Start time',
-        'End time',
-        'Timebirding',
-        'Number of observers',
-        'Visit notes','Number',
-        'Activity',
-        'Purpose',
-        'Duplicate',
-        'Observation is private',
-        'Status',
-        'Validation notes',
-        'All birds recorded?',
-        'Poor conditions',
-        'Visit species notes',
-        'Location ID',
-        'Visit ID',
-        'Visit Species ID',
-    ]
+    def __init__(self):
+        self.species = {}
 
-    species_filename = 'data/portugalaves/species.csv'
-    locations_filename = 'data/portugalaves/locations.csv'
-
-    def load_resources(self):
+    def load_resources(self, species_filename):
         species_file = pkg_resources.resource_filename(
-            'ebimport', self.species_filename)
-        self.load_species(self.species, species_file)
-        locations_file = pkg_resources.resource_filename(
-            'ebimport', self.locations_filename)
-        self.load_locations(self.locations, locations_file)
+            'ebimport', species_filename)
+        if os.path.exists(species_file):
+            self.load_species(self.species, species_file)
 
     def load_species(self, table, filename):
         """Update the species table with the records from the file.
@@ -100,20 +70,6 @@ class PortugalAvesHandler(object):
         species_table = read_csv_file(filename)
         for entry in species_table:
             key = entry['BirdLife common name']
-            table[key] = entry
-
-    def load_locations(self, table, filename):
-        """Update the location table with the records from the file.
-
-        arguments:
-            table (dict): maps Worldbirds location to the equivalent location
-                used by eBird.
-            filename (str): the path to a csv formatted file.
-        """
-        locations_table = read_csv_file(filename)
-        for entry in locations_table:
-            key = (entry["Worldbirds Location"], entry["Worldbirds Latitude"],
-                   entry["Worldbirds Longitude"])
             table[key] = entry
 
     def read_header(self, file):
@@ -150,36 +106,33 @@ class PortugalAvesHandler(object):
         return headers
 
     def read_record(self, line, names):
-        """Read the record into a dict.
-
-        An extra field, Row Number, is added to identify the record in the
-        file. eBird csv files do not contain a header row with the column names
-        so the same number can be used to identify a row in the output file.
+        """Read selected columns from the record into a dict.
 
         arguments:
             line (unicode): a line read from the file containing a record from
                 WorldBirds.
-            names (list(str)): a list of the names of each field in the record.
+            names (dict): a dict containing of the names of each field and the
+                column in the record to extract the value from.
 
         returns:
             a dict with the field names as the key and the value from the
             corresponding column in the record.
         """
         fields = [column.strip() for column in line.strip().split('\t')]
-        return dict(zip(['Row Number'] + names, fields))
+        return {name: fields[column] for (name, column) in names.iteritems()}
 
     def convert_species(self, rin):
         """Map the WorldBirds species name to the species name used in eBird.
 
-        In addition to the fields used by eBird a field, species Converted, with
-        a value of True or False is added to indicate whether an eBird species
-        name matching the BirdLife common name used by WorldBirds was found. This
-        is used to identify the records which must either be edited before the
-        records are imported into eBird or corrected after the initial import.
+        In addition to the fields used by eBird a field, species Converted,
+        with a value of True or False is added to indicate whether an eBird
+        species name matching the BirdLife common name used by WorldBirds was
+        found. This is used to identify the records which must either be edited
+        before the records are imported into eBird or corrected after the
+        initial import.
 
         arguments:
             rin (dict): the record from WorldBirds
-            species (dict): the table of eBird species names
 
         returns:
             a dict containing the fields for an eBird species.
@@ -199,37 +152,23 @@ class PortugalAvesHandler(object):
         return rout
 
     def convert_location(self, rin):
-        """Update the location details if there is an entry in the table.
+        """Map the location fields to the fields used in eBird.
 
         arguments:
             rin (dict): the record from WorldBirds
-            table (dict): a table of values that define a location.
 
         returns
-            the records with the location related field updated if there is a
-            corresponding entry in the table.
+            a dict containing the fields for an eBird location.
 
         """
-        rout = {
-            'Location Name': rin["Location"],
-            'Latitude': rin["Latitude"],
-            'Longitude': rin["Longitude"],
+        return {
+            'Location Name': rin['Location'],
+            'Latitude': rin['Latitude'],
+            'Longitude': rin['Longitude'],
             'State/Province': '',
             'Country Code': '',
             'Location Converted': False,
             }
-
-        key = rin["Location"], rin["Latitude"], rin["Longitude"]
-        if key in self.locations:
-            entry = self.locations[key]
-            if entry['eBird Location']:
-                rout['Location Name'] = entry['eBird Location']
-                rout['Latitude'] = entry['eBird Latitude']
-                rout['Longitude'] = entry['eBird Longitude']
-            rout['State/Province'] = entry['eBird Region Code']
-            rout['Country Code'] = entry['eBird Country Code']
-            rout['Location Converted'] = True
-        return rout
 
     def convert_record(self, rin):
         """Convert the record from WorldBirds to the format used by eBird.
@@ -284,29 +223,21 @@ class PortugalAvesHandler(object):
         return rout
 
     def convert_file(self, filein, fileout):
-        fin = None
         fout = None
         record_number = 1
 
-        try:
-            fin = codecs.open(filein, 'rb', 'utf-16')
-            self.read_header(fin)
+        fin = codecs.open(filein, 'rb', 'utf-16')
+        self.read_header(fin)
 
-            for line in fin:
-                rin = self.read_record(line, self.headers)
-                rout = self.convert_record(rin)
+        for line in fin:
+            rin = self.read_record(line, self.headers)
+            rout = self.convert_record(rin)
+            if not fout:
+                fout = open(fileout, 'wb')
+            row = ['"%s"' % rout[name] for name in EBIRD_HEADERS]
+            fout.write(','.join(row).encode('utf-8'))
+            fout.write('\r\n')
+            record_number += 1
 
-                if not fout:
-                    fout = open(fileout, 'wb')
-                row = ['"%s"' % rout[name] for name in EBIRD_HEADERS]
-                fout.write(','.join(row).encode('utf-8'))
-                fout.write('\r\n')
-                record_number += 1
-
-        except Exception, err:
-            pass
-        finally:
-            if fin:
-                fin.close()
-            if fout:
-                fout.close()
+        fin.close()
+        fout.close()
