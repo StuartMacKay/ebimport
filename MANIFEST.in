@@ -1,2 +1,5 @@
 include *.rst *.txt
-recursive-include ebimport *.csv *.py
+recursive-include docs *.rst
+recursive-include ebird_import *.py
+recursive-include bin *.py
+recursive-include data *.csv

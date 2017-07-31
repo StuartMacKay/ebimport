@@ -1,4 +1,5 @@
 import os
+import unittest
 
 from setuptools import setup, find_packages
 
@@ -7,25 +8,24 @@ def read(filename):
     with open(os.path.join(os.path.dirname(__file__), filename)) as fp:
         return fp.read()
 
+def test_suite():
+    test_loader = unittest.TestLoader()
+    return test_loader.discover('tests', pattern='test_*.py')
+
 
 setup(
-    name='ebimport',
-    version='0.2.0',
+    name='ebird-import',
+    version='0.3.0',
     description='Tools for loading records into eBird',
     long_description=read("README.rst"),
     author='Stuart MacKay',
     author_email='smackay@flagstonesoftware.com',
-    url='http://pypi.python.org/pypi/ebimport/',
+    url='http://pypi.python.org/pypi/ebird-import/',
     license='GPL',
     packages=find_packages(),
-    package_data={'ebimport': [
-        'data/portugalaves/species.csv',
-        'data/portugalaves/locations.csv']
-    },
-    scripts=['ebimport/bin/ebconvert'],
+    scripts=['bin/ebird-convert'],
     keywords='eBird import csv',
-    test_suite='nose.collector',
-    tests_require=['nose', 'nose-cover3'],
+    test_suite='setup.test_suite',
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Environment :: Console",

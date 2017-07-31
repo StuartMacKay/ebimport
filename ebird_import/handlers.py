@@ -7,7 +7,7 @@ import os
 import pkg_resources
 import re
 
-from ebimport.shared import read_csv_file
+from shared import read_csv_file
 
 
 EBIRD_HEADERS = [
@@ -38,16 +38,16 @@ class WorldbirdsHandler(object):
     headers = {
         'BirdLife common name': 6,
         'Location': 7,
-        'Latitude': 11,
-        'Longitude': 12,
-        'Visit date': 20,
-        'Start time': 21,
-        'End time': 22,
-        'Number of observers': 24,
-        'Visit notes': 25,
-        'Number': 26,
-        'All birds recorded?': 33,
-        'Visit species notes': 35,
+        'Latitude': 12,
+        'Longitude': 13,
+        'Visit date': 21,
+        'Start time': 22,
+        'End time': 23,
+        'Number of observers': 25,
+        'Visit notes': 26,
+        'Number': 27,
+        'All birds recorded?': 34,
+        'Visit species notes': 36,
     }
 
     def __init__(self):
@@ -55,7 +55,7 @@ class WorldbirdsHandler(object):
 
     def load_resources(self, species_filename):
         species_file = pkg_resources.resource_filename(
-            'ebimport', species_filename)
+            'ebird_import', species_filename)
         if os.path.exists(species_file):
             self.load_species(self.species, species_file)
 

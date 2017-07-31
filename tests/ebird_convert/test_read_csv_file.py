@@ -2,8 +2,7 @@ import os
 
 from cli.test import FunctionalTest
 
-from ebimport.shared import (FileNotFoundException, FileReadException,
-                                 read_csv_file)
+from ebird_import.shared import FileNotFoundException, FileReadException, read_csv_file
 
 
 class ReadCSVFileTests(FunctionalTest):

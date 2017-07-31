@@ -1,6 +1,7 @@
 import csv
 import os
 
+
 class CustomException(Exception):
     def __init__(self, value):
         self.parameter = value
@@ -40,9 +41,7 @@ def read_csv_file(filepath, encoding='utf-8'):
                     else:
                         row[key] = unicode(row[key], encoding)
                 table.append(row)
-    except Exception, err:
+    except Exception:
         raise FileReadException(filepath)
 
     return table
-
-

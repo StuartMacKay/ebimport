@@ -1,7 +1,7 @@
 import pkg_resources
 import unittest
 
-from ebimport.handlers import PortugalAvesHandler
+from ebird_import.handlers import WorldbirdsHandler
 
 
 class LoadSpeciesTests(unittest.TestCase):
@@ -9,9 +9,9 @@ class LoadSpeciesTests(unittest.TestCase):
 
     def setUp(self):
         super(LoadSpeciesTests, self).setUp()
-        self.obj = PortugalAvesHandler()
+        self.obj = WorldbirdsHandler()
         location_file = pkg_resources.resource_filename(
-            'ebimport', 'data/portugalaves/species.csv')
+            __name__, '../../data/birdlife_species_names.csv')
         self.obj.load_species(self.obj.species, location_file)
 
     def test_convert_known_species(self):
@@ -38,6 +38,3 @@ class LoadSpeciesTests(unittest.TestCase):
         result = self.obj.convert_species(record)
         self.assertEquals(result['Common Name'], 'Dodo')
         self.assertFalse(result['Species Converted'])
-
-
-

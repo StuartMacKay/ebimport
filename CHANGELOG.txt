@@ -1,3 +1,14 @@
+Version 0.3.0 (31-Jul-2017)
+---------------------------
+
+  * Renamed conversion script to ebird-convert.
+  * Cleaned up project and package structure.
+
+Version 0.2.0 (30-Jan-2013)
+---------------------------
+
+  * Refactored code to make it easier to support other WorldBird databases.
+
 Version 0.1.0 (04-Dec-2012)
 ---------------------------
 

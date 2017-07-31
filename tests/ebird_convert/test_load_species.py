@@ -1,7 +1,7 @@
 import pkg_resources
 import unittest
 
-from ebimport.handlers import PortugalAvesHandler
+from ebird_import.handlers import WorldbirdsHandler
 
 
 class LoadSpeciesTests(unittest.TestCase):
@@ -9,10 +9,8 @@ class LoadSpeciesTests(unittest.TestCase):
 
     def test_load_species(self):
         """Species file can be loaded from package resources."""
-        obj = PortugalAvesHandler()
+        obj = WorldbirdsHandler()
         location_file = pkg_resources.resource_filename(
-            'ebimport', 'data/portugalaves/species.csv')
+            __name__, '../../data/birdlife_species_names.csv')
         obj.load_species(obj.species, location_file)
         self.assertTrue(obj.species)
-
-

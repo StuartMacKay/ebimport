@@ -1,6 +1,6 @@
-=========
-ebconvert
-=========
+=============
+ebird-convert
+=============
 
 Description
 ===========
@@ -8,10 +8,10 @@ Description
 Converts records exported from birding databases so they can be imported
 into eBird::
 
-    usage: ebconvert [-h] [-l LOGFILE] [-q] [-s] [-v]
-                     [-f {portugalaves}]
-                     [-o OUTPUTFILE]
-                     [FILE]
+    usage: ebird-convert [-h] [-l LOGFILE] [-q] [-s] [-v]
+                         [-f {portugalaves}]
+                         [-o OUTPUTFILE]
+                         [FILE]
 
     Converts records into eBird's Checklist Record Format. The conversion
     process converts species names and matches locations to existing ones.

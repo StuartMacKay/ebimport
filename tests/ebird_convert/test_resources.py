@@ -1,7 +1,7 @@
 import pkg_resources
 import unittest
 
-from ebimport.shared import read_csv_file
+from ebird_import.shared import read_csv_file
 
 
 def find_resource_files(files, package, resource_dir):
@@ -30,7 +30,7 @@ class ResourceTests(unittest.TestCase):
     def setUp(self):
         super(ResourceTests, self).setUp()
         self.files = []
-        find_resource_files(self.files, 'ebimport', 'data')
+        find_resource_files(self.files, 'ebird_import', '../data')
 
     def test_load_resources(self):
         """All the resource files can be loaded."""
@@ -48,5 +48,3 @@ class ResourceTests(unittest.TestCase):
         for file in self.files:
             for entry in read_csv_file(file):
                 self.assertTrue('"' not in ','.join(entry.values()))
-
-

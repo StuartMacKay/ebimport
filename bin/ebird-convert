@@ -3,7 +3,7 @@
 
 import cli.log
 
-from ebimport.handlers import WorldbirdsHandler
+from ebird_import.handlers import WorldbirdsHandler
 
 
 @cli.log.LoggingApp(message_format="%(levelname)s: %(message)s")

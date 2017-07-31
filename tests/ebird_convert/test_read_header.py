@@ -4,7 +4,7 @@ import unittest
 
 from StringIO import StringIO
 
-from ebimport.handlers import PortugalAvesHandler
+from ebird_import.handlers import WorldbirdsHandler
 
 
 class ReadHeaderTests(unittest.TestCase):
@@ -12,7 +12,7 @@ class ReadHeaderTests(unittest.TestCase):
 
     def setUp(self):
         super(ReadHeaderTests, self).setUp()
-        self.obj = PortugalAvesHandler()
+        self.obj = WorldbirdsHandler()
 
     def test_load_file_with_bom(self):
         """Find headers when file contents has a UTF-16 byte order mark."""
